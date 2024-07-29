@@ -30,13 +30,15 @@ class PublishImages(Node):
         self.declare_parameter("ip_address", "default_value")
         # Access the parameter value
         ip_address = self.get_parameter("ip_address").get_parameter_value().string_value
-        print('jdfsdnjsd ip adress', ip_address)
+        print('ip adress', ip_address)
         self.declare_parameter("pub_topic_name", "default_value")
         # Access the parameter value
         pub_topic_name = self.get_parameter("pub_topic_name").get_parameter_value().string_value
         print("gGGGGGGGGGGGGG", username , ip_address, pub_topic_name)
         password = os.environ['TAPO_CAMERA_PASS']
         self.link = "rtsp://" + username + ":" + password + "@" + ip_address + "/stream2"
+        self.publisher_ = self.create_publisher(Image,pub_topic_name, 10)
+
 
         self.node_name = node_name
         self.bridge = CvBridge()
@@ -77,6 +79,7 @@ def main(args=None):
         print('after_ok')
         node.camera_callback()
 
+    node.destroy_node()
     rclpy.shutdown()
 
     node.cap.release()
